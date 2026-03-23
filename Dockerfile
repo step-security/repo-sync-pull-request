@@ -6,7 +6,7 @@ LABEL \
   "maintainer"="step-security"
 
 RUN echo https://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
-  apk add --no-cache git hub bash
+  apk add --no-cache git hub bash curl
 
 ADD *.sh /
 
