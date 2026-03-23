@@ -81,7 +81,7 @@ if [[ -n "$INPUT_WORKING_DIRECTORY" ]]; then
 fi
 
 # Fix for the unsafe repo error: https://github.com/repo-sync/pull-request/issues/84
-git config --global --add safe.directory $(pwd)
+git config --global --add safe.directory "$(pwd)"
 
 ##############################
 echo "::group::Gather Inputs"
@@ -90,7 +90,6 @@ if [[ -z "$GITHUB_TOKEN" ]]; then
   if [[ ! -z "$INPUT_GITHUB_TOKEN" ]]; then
     GITHUB_TOKEN="$INPUT_GITHUB_TOKEN"
     echo "::add-mask::$INPUT_GITHUB_TOKEN"
-    echo_info "INPUT_GITHUB_TOKEN=$INPUT_GITHUB_TOKEN"
   else
     echo_fail "Set the GITHUB_TOKEN environment variable."
     exit 1

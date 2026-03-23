@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.23
 
 LABEL \
   "name"="GitHub Pull Request Action" \
