@@ -5,8 +5,7 @@ LABEL \
   "repository"="https://github.com/step-security/repo-sync-pull-request" \
   "maintainer"="step-security"
 
-RUN echo https://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
-  apk add --no-cache git hub bash curl
+RUN apk add --no-cache git github-cli bash curl
 
 ADD *.sh /
 

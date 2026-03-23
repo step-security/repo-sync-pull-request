@@ -160,40 +160,40 @@ fi
 echo "::endgroup::"
 
 #############################################
-echo "::group::Assemble hub pr parameters"
-# Workaround for `hub` auth error https://github.com/github/hub/issues/2149#issuecomment-513214342
-export GITHUB_USER="$GITHUB_ACTOR"
+echo "::group::Assemble gh pr parameters"
 
-PR_ARG=(-b "$DESTINATION_BRANCH" -h "$SOURCE_BRANCH" --no-edit)
+export GH_TOKEN="$GITHUB_TOKEN"
+
+PR_ARG=(--base "$DESTINATION_BRANCH" --head "$SOURCE_BRANCH")
 
 if [[ ! -z "$INPUT_PR_TITLE" ]]; then
-  PR_ARG+=(-m "$INPUT_PR_TITLE")
-  if [[ ! -z "$INPUT_PR_TEMPLATE" ]]; then
-    sed -i 's/`/\\`/g; s/\$/\\\$/g' "$INPUT_PR_TEMPLATE"
-    PR_ARG+=(-m "$(echo -e "$(cat "$INPUT_PR_TEMPLATE")")")
-  elif [[ ! -z "$INPUT_PR_BODY" ]]; then
-    PR_ARG+=(-m "$INPUT_PR_BODY")
-  fi
+  PR_ARG+=(--title "$INPUT_PR_TITLE")
+fi
+
+if [[ ! -z "$INPUT_PR_TEMPLATE" ]]; then
+  PR_ARG+=(--body-file "$INPUT_PR_TEMPLATE")
+elif [[ ! -z "$INPUT_PR_BODY" ]]; then
+  PR_ARG+=(--body "$INPUT_PR_BODY")
 fi
 
 if [[ ! -z "$INPUT_PR_REVIEWER" ]]; then
-  PR_ARG+=(-r "$INPUT_PR_REVIEWER")
+  PR_ARG+=(--reviewer "$INPUT_PR_REVIEWER")
 fi
 
 if [[ ! -z "$INPUT_PR_ASSIGNEE" ]]; then
-  PR_ARG+=(-a "$INPUT_PR_ASSIGNEE")
+  PR_ARG+=(--assignee "$INPUT_PR_ASSIGNEE")
 fi
 
 if [[ ! -z "$INPUT_PR_LABEL" ]]; then
-  PR_ARG+=(-l "$INPUT_PR_LABEL")
+  PR_ARG+=(--label "$INPUT_PR_LABEL")
 fi
 
 if [[ ! -z "$INPUT_PR_MILESTONE" ]]; then
-  PR_ARG+=(-M "$INPUT_PR_MILESTONE")
+  PR_ARG+=(--milestone "$INPUT_PR_MILESTONE")
 fi
 
 if [[ "$INPUT_PR_DRAFT" ==  "true" ]]; then
-  PR_ARG+=(-d)
+  PR_ARG+=(--draft)
 fi
 
 echo_info "${PR_ARG[@]}"
@@ -202,10 +202,10 @@ echo "::endgroup::"
 ##########################################################################
 echo "::group::Create pull request $SOURCE_BRANCH -> $DESTINATION_BRANCH"
 
-COMMAND="hub pull-request "${PR_ARG[@]}" 2> /tmp/pull-request.stderr.log || true"
+COMMAND="gh pr create ${PR_ARG[*]} --repo $DESTINATION_REPOSITORY"
 echo_info "$COMMAND"
 
-PR_URL=$(hub pull-request "${PR_ARG[@]}" 2> /tmp/pull-request.stderr.log || true)
+PR_URL=$(gh pr create "${PR_ARG[@]}" --repo "$DESTINATION_REPOSITORY" 2> /tmp/pull-request.stderr.log || true)
 STD_ERROR="$(cat /tmp/pull-request.stderr.log || true)"
 echo_error "STD_ERROR=$STD_ERROR"
 
@@ -236,7 +236,7 @@ fi
 # attempt to obtain the pull-request details - pr already exists.
 if [[ -z "$PR_URL" ]]; then
   PR_URL=$(\
-    hub pr list -h $SOURCE_BRANCH -b $DESTINATION_BRANCH -f %U \
+    gh pr list --head "$SOURCE_BRANCH" --base "$DESTINATION_BRANCH" --repo "$DESTINATION_REPOSITORY" --json url --jq '.[0].url' \
     2>"./get-pull-request.stderr.log" || true \
   )
   STD_ERROR="$(cat "./get-pull-request.stderr.log" || true)"
