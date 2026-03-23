@@ -1,5 +1,5 @@
 name: GitHub Pull Request Action
-author: Wei He <github@weispot.com>
+author: step-security
 description: ⤵️ Create pull request
 branding:
   icon: 'git-pull-request'

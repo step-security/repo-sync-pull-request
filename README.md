@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: step-security/repo-sync-pull-request@v1
+      - uses: step-security/repo-sync-pull-request@v2
         with:
           pr_title: "Merge ${{ github.ref_name }} into main"
           destination_branch: main
@@ -36,7 +36,7 @@ jobs:
 ### With reviewers, labels, and assignees
 
 ```yaml
-- uses: step-security/repo-sync-pull-request@v1
+- uses: step-security/repo-sync-pull-request@v2
   with:
     pr_title: "Release: merge develop into main"
     pr_body: "Automated PR to merge latest changes from develop."
@@ -54,7 +54,7 @@ jobs:
 ```yaml
 steps:
   - uses: actions/checkout@v6
-  - uses: step-security/repo-sync-pull-request@v1
+  - uses: step-security/repo-sync-pull-request@v2
     id: create-pr
     with:
       pr_title: "Sync changes"
@@ -67,7 +67,7 @@ steps:
 ### Cross-repository pull request
 
 ```yaml
-- uses: step-security/repo-sync-pull-request@v1
+- uses: step-security/repo-sync-pull-request@v2
   with:
     destination_repository: "owner/other-repo"
     pr_title: "Sync upstream changes"
