@@ -5,7 +5,7 @@ LABEL \
   "repository"="https://github.com/step-security/repo-sync-pull-request" \
   "maintainer"="step-security"
 
-RUN apk add --no-cache git github-cli bash curl
+RUN apk add --no-cache git github-cli bash curl jq
 
 ADD *.sh /
 

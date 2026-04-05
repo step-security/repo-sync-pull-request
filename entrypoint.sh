@@ -7,6 +7,7 @@ set -o pipefail
 UPSTREAM="repo-sync/pull-request"
 ACTION_REPO="${GITHUB_ACTION_REPOSITORY:-}"
 DOCS_URL="https://docs.stepsecurity.io/actions/stepsecurity-maintained-actions"
+REPO_PRIVATE=$(jq -r '.repository.private | tostring' "$GITHUB_EVENT_PATH" 2>/dev/null || echo "")
 
 echo ""
 echo -e "\033[1;36mStepSecurity Maintained Action\033[0m"
