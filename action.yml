@@ -63,6 +63,6 @@ outputs:
     description: 'Boolean string indicating whether any file has been changed'
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/step-security/repo-sync-pull-request:v2.12.1@sha256:d2871db8601f971f250d0ddb7a4cd64651cfd4e81af9e0c5024bda67f80557ac' # v2.12.1
+  image: 'docker://ghcr.io/step-security/repo-sync-pull-request:v2.12.2@sha256:224748fa72e8c9df6ba533eb2f7890ee41fbf4608150b99740013eb3fb48bcf4' # v2.12.2
   env:
     GITHUB_TOKEN: ${{ inputs.github_token }}
